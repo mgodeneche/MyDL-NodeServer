@@ -44,7 +44,7 @@ describe("Tests à propos des Users", function() {
 	});
 	it("Le password du User est correctement crypté", function() {
 		var password = myUser.password;
-		expect(password).toEqual(utils.encrypt(password));
+		expect(password).toEqual(utils.encrypt(passwordTest));
 	});
 	//TODO: User BDD (CRUD)
 
