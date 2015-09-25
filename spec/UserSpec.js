@@ -3,9 +3,9 @@ var utils = require('../src/utils.js');
 describe("Tests à propos des Users", function() {
  
 	var usernameTest = "usernameTest";
-	var emailTest = "emailTest";
+	var emailTest = "email@test.com";
 	var passwordTest ="passwordTest";
-	var myUser = userClass.create('usernameTest','emailTest','passwordTest');
+	var myUser = userClass.create(usernameTest,emailTest,passwordTest);
 
 	/**********
 	*   TDD   *
@@ -30,6 +30,10 @@ describe("Tests à propos des Users", function() {
 		var email = myUser.email;
 		expect(email).not.toBe(null);
 	});
+	it("L'email du User est un string",function () {
+		var emailType = typeof myUser.email;
+		expect(emailType).toEqual("string");
+	});
 	it("L'email du User est conforme", function() {
 		var email = myUser.email;
 		expect(email).toEqual(emailTest);
@@ -37,6 +41,10 @@ describe("Tests à propos des Users", function() {
 	it("L'User possède un password non null", function() {
 		var password = myUser.password;
 		expect(password).not.toBe(null);
+	});
+	it("Le password du User est un string",function(){
+		var passwordType = typeof myUser.password;
+		expect(passwordType).toEqual("string");
 	});
 	it("Le password du User n'est pas en clair", function() {
 		var password = myUser.password;
