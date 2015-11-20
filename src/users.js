@@ -29,16 +29,28 @@ exports.findAll = function(){
 	});
 }
 
-exports.authenticate = function(user,fn){
-	User.findOne({
-		'username':user.username,
-		'password':user.password,
-	},'username', function (err, dbuser) {
-  			if (err) return handleError(err);
-  			console.log();
-  		  	fn(Boolean(dbuser));
-  		  	
+exports.authenticate = function(user, onAuthenticate){
+	console.log("User.authenticate");
+	var result = "false";
+	var query = User.where(
+	{ 
+		email : user.email,
+		password : user.password
+		
 	});
-	
+	query.findOne(function(err,user){
+		if(err){return handleError(err);}
+		if(user){
+			result = "true";
+		}
+	});
+	return result;
 }
+
+exports.onAuthenticate(err, result){
+	console.log(result);
+	return result;
+}
+
+
 
