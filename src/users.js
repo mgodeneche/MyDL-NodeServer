@@ -18,8 +18,10 @@ exports.create = function(username,email,password){
 	});
 };
 
-exports.save = function(User){
+exports.save = function(User,callback){
 	User.save();
+	callback(User.email);
+
 }
 
 exports.findAll = function(){
@@ -29,28 +31,25 @@ exports.findAll = function(){
 	});
 }
 
-exports.authenticate = function(user, onAuthenticate){
-	console.log("User.authenticate");
-	var result = "false";
-	var query = User.where(
-	{ 
-		email : user.email,
-		password : user.password
-		
-	});
-	query.findOne(function(err,user){
-		if(err){return handleError(err);}
-		if(user){
-			result = "true";
-		}
-	});
-	return result;
+exports.authenticate = function(user,callback){
+    var result = "false";
+    var query = User.where(
+    { 
+        email : user.email,
+        password : user.password
+
+    });
+    query.findOne(function(err,user){
+        if(err){return handleError(err);}
+        if(user){
+            result = "true";
+        }
+        console.log(user);
+        callback(result);
+    });
 }
 
-exports.onAuthenticate(err, result){
-	console.log(result);
-	return result;
-}
+
 
 
 

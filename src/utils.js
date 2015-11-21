@@ -1,3 +1,4 @@
+mailer = require('express-mailer');
 Date.prototype.today = function () { 
     return ((this.getDate() < 10)?"0":"") + this.getDate() +"/"+(((this.getMonth()+1) < 10)?"0":"") + (this.getMonth()+1) +"/"+ this.getFullYear();
 }
@@ -24,4 +25,10 @@ exports.decrypt =function(text){
 	var dec = decipher.update(text,'hex','utf8');
 	dec += decipher.final('utf8');
 	return dec;
+}
+
+exports.passwordGenerate = function(){
+	var randomstring = Math.random().toString(36).slice(-8);
+	console.log(randomstring);
+	return randomstring;
 }
