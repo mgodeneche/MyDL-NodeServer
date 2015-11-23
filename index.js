@@ -1,4 +1,4 @@
-/****
+ /****
 *
 * VARIABLES
 *
@@ -169,7 +169,7 @@ function handleResetRequest(request){
 	
 	}
 }
-
+/*
 function mailTo(dest,subject){
 	app.mailer.send('email', { // LE TEMPLATE N'EST PAS ENCORE CREE , FONCTION BUGGEE
 	    to: dest, // REQUIRED. This can be a comma delimited string just like a normal email to field.  
@@ -183,6 +183,7 @@ function mailTo(dest,subject){
 	    }
 	    res.send('Email Sent');
 	  });
-	});
 }
+*/
+
 
