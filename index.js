@@ -60,7 +60,8 @@ db.once('open', function (callback) {
 //C'est ici qu'on prends l'authentification
 app.post('/auth', function(req, res){
 	handleLoginRequest(req,function(auth){
-		res.send('user :'+auth);
+		console.log("callback= "+auth);
+		res.send(auth);
 	});
 	
 	
@@ -117,7 +118,7 @@ function handleLoginRequest(request,callback) {
 			
 			// authenticate with user
 			var auth = userClass.authenticate(myUser,function(result){
-				//console.log();
+				//console.log("handleLoginRequest.result = "+result);
 				callback(result);
 					});
 			

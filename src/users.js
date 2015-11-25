@@ -44,7 +44,7 @@ exports.authenticate = function(user,callback){
         if(user){
             result = "true";
         }
-        console.log(user);
+        console.log("authenticated= "+result)
         callback(result);
     });
 }
