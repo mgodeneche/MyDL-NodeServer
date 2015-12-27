@@ -49,11 +49,11 @@ exports.authenticate = function(user,callback){
     });
 }
 
-exports.isEmailUsed = function(emailProvided,callback){
+exports.isEmailUsed = function(email,callback){
     var result = "false";
     var query = User.where(
     { 
-        email : emailProvided,
+        email : user.email,
 
     });
     query.findOne(function(err,user){
@@ -62,17 +62,6 @@ exports.isEmailUsed = function(emailProvided,callback){
             result = "true";
         }
         callback(result);
-    });
-}
-exports.findByEmail = function(emailProvided,callback){
-    var query = User.where(
-    { 
-        email : emailProvided,
-
-    });
-    query.findOne(function(err,user){
-        if(err){return handleError(err);}
-        callback(user);
     });
 }
 

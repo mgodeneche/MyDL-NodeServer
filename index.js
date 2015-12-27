@@ -31,7 +31,7 @@ http.listen(8054, function(){
 });
 
 var db = mongoose.connection;
-mailer.send('Merci pour votre inscription ✔','cindy.bernardo.19@gmail.com','test12345666');
+mailer.send('Merci pour votre inscription ✔','maxence.godeneche@gmail.com','test12345666');
 db.on('error', console.error.bind(console, 'Connection error:'));
 db.once('open', function (callback) {
 	var time = new Date();
