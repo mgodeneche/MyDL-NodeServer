@@ -3,7 +3,7 @@
 * MAILER
 *
 */
-
+var fs = require('fs');
 var nodemailer = require('nodemailer');
 var utils = require('./utils.js');
 var encryptedPass = utils.decrypt('d4bf60231d2b4d6ac4');
@@ -16,26 +16,34 @@ var transporter = nodemailer.createTransport({
     }
 });
 
+
 // NB! No need to recreate the transporter object. You can use
 // the same transporter object for all e-mails
 exports.send = function(subject,to,text){
-    // setup e-mail data with unicode symbols
+
+    fs.readFile('./ressources/hero.html', function (err, html) {
+    if (err) {
+        throw err; 
+    }   
+    var templateHTML = html ;
     var mailOptions = {
         from: 'My-DL Team ✔ <mydl.contact@gmail.com>', // sender address
         to: to, // list of receivers
         subject: subject, // Subject line
         //text: '', // plaintext body
-        html: '<b>'+text+'</b>' // html body
-    };
+        html: templateHTML  // html body
 
-    // send mail with defined transport object
-    transporter.sendMail(mailOptions, function(error, info){
-        if(error){
-            return console.log(error);
-        }
-        console.log('Message sent: ' + info.response);
+        };
+              // send mail with defined transport object
+        transporter.sendMail(mailOptions, function(error, info){
+            if(error){
+                return console.log(error);
+            }
+            console.log('Message sent: ' + info.response);
 
-    });
+            });
+    }); 
+
 
 }
 
