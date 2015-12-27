@@ -10,28 +10,15 @@ var http = require('http').Server(app);
 var userClass = require('./src/users.js');
 var downloadClass = require('./src/downloads.js');
 var utils = require('./src/utils.js');
+var mailer = require('./src/mailer.js');
 var url = require('url');
 var qs = require('querystring');
 var myURI = 'mongodb://admin:admin@ds035750.mongolab.com:35750/mydl';
 var mongoose = require('mongoose');
+var mailMGO = 'maxence.godeneche@gmail.com';
+var subject ='test d\'envoi de mail';
 mongoose.connect(myURI);
 
-/****
-*
-* MAILER
-*
-*/
-mailer.extend(app, {
-  from: 'no-reply@mydl.com',
-  host: 'smtp.gmail.com', // hostname 
-  secureConnection: true, // use SSL 
-  port: 465, // port for secure SMTP 
-  transportMethod: 'SMTP', // default is SMTP. Accepts anything that nodemailer accepts 
-  auth: {
-    user: 'gmail.user@gmail.com',
-    pass: 'userpass'
-  }
-});
 
 /****
 *
@@ -44,11 +31,12 @@ http.listen(8054, function(){
 });
 
 var db = mongoose.connection;
+mailer.send('Merci pour votre inscription ✔','maxence.godeneche@gmail.com','test12345666');
 db.on('error', console.error.bind(console, 'Connection error:'));
 db.once('open', function (callback) {
 	var time = new Date();
 	var timenow = time.today().toString()+" "+time.timeNow().toString();
-  	console.log("Server started at "+timenow);
+  	console.log("MyDL Server started at "+timenow);
   	
 });
 /****
@@ -60,7 +48,7 @@ db.once('open', function (callback) {
 //C'est ici qu'on prends l'authentification
 app.post('/auth', function(req, res){
 	handleLoginRequest(req,function(auth){
-		console.log("callback= "+auth);
+		//console.log("callback= "+auth);
 		res.send(auth);
 	});
 	
@@ -164,27 +152,20 @@ function handleResetRequest(request){
         request.on('end', function () {
 			var data = JSON.parse(body);
 			var email = data.email;
-			var newPassword = utils.passwordGenerate();
-			//mailto email 
+			userClass.isEmailUsed(email,function(result){
+				if(user){
+					var newPassword = utils.passwordGenerate();
+					mailer.send('Réinitialisation de mot de passe',email,"Voici votre nouveau mot de passe : "+newPassword)
+				}
+			});
+
+			
 		});
 	
 	}
 }
-/*
-function mailTo(dest,subject){
-	app.mailer.send('email', { // LE TEMPLATE N'EST PAS ENCORE CREE , FONCTION BUGGEE
-	    to: dest, // REQUIRED. This can be a comma delimited string just like a normal email to field.  
-	    subject: subject, // REQUIRED. 
-	  }, function (err) {
-	    if (err) {
-	      // handle error 
-	      console.log(err);
-	      res.send('There was an error sending the email');
-	      return;
-	    }
-	    res.send('Email Sent');
-	  });
-}
-*/
+
+
+
 
 

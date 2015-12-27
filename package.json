@@ -1,6 +1,6 @@
 {
   "name": "myDL",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Gestionnaire de téléchargement",
   "dependencies": {
     "express": "^4.10.2"

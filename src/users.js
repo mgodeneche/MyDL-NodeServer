@@ -49,6 +49,22 @@ exports.authenticate = function(user,callback){
     });
 }
 
+exports.isEmailUsed = function(email,callback){
+    var result = "false";
+    var query = User.where(
+    { 
+        email : user.email,
+
+    });
+    query.findOne(function(err,user){
+        if(err){return handleError(err);}
+        if(user){
+            result = "true";
+        }
+        callback(result);
+    });
+}
+
 
 
 
