@@ -31,7 +31,7 @@ http.listen(8054, function(){
 });
 
 var db = mongoose.connection;
-mailer.send('Merci pour votre inscription ✔','maxence.godeneche@gmail.com','test12345666');
+utils.linkGenerate();
 db.on('error', console.error.bind(console, 'Connection error:'));
 db.once('open', function (callback) {
 	var time = new Date();
@@ -55,28 +55,34 @@ app.post('/auth', function(req, res){
 	
 });
 
-
 //C'est ici qu'on prends l'enregisrement
 app.post('/register', function(req, res){
-	handleRegisterRequest(req);
+	handleRegisterRequest(req,function(userCreated){
+		if(userCreated===true){
+			res.send(200);
+		}else{
+			res.send(400);
+		}
+	});
  	console.log("register !");
-
- 
 });
 
 //C'est ici qu'on prends le reset de mot de passe
 app.post('/reset', function(req, res){
 	handleResetRequest(req);
-  	console.log('reset ! ');
-
-  
+  	console.log('reset ! '); 
 });
 
 app.get('/activation', function(req, res){
-  console.log('activation ! ');
-
-  
+	handleActivationRequest(req);
+  	console.log('activation ! ');
+  	res.send(200);  
 });
+
+
+app.post('/downloadAdd',function(req,res){
+	console.log('on ajoute un DL');
+})
 /****
 *
 * METIER
@@ -115,14 +121,14 @@ function handleLoginRequest(request,callback) {
 }
 
 
-function handleRegisterRequest(request){
+function handleRegisterRequest(request,callback){
 	if (request.method == 'POST') {
     	//console.log("Trying to get POST");
         var body = '';
         request.on('data', function (data) {
             body += data;
         });
-		
+		var userCreated = false;
 		// Get datas, parse them and create user with it
         request.on('end', function () {
 			var data = JSON.parse(body);
@@ -132,10 +138,36 @@ function handleRegisterRequest(request){
 			
 			myUser = userClass.create(login,email,password);
 			//CALLBACK DE LA MORT, pas testé.
+			userClass.isEmailUsed(email,function(result){
+				if(user){
+					console.log('Le user existe déja');
+					// break ici 
+				}
+			});
 			userClass.save(myUser,function(myUser){
-				//MAILTO email;
+				var activationLink = utils.linkGenerate();
+				mailer.registerMail(email,activationLink)
+				userCreated = true;
 			});
 
+		});
+		callback(userCreated);
+	}
+}
+
+function handleActivationRequest(request){
+	if (request.method == 'GET') {
+    	//console.log("Trying to get POST");
+        var code = request.param('activationCode');
+        var email = request.param('email');
+		request.on('end', function () {
+			userClass.isEmailUsed(email,function(result){
+				if(user && (user.activated === code)){
+					user.activated = 'yes';
+
+				}
+			});
+        //console.log(code);
 		});
 	}
 }
@@ -155,7 +187,9 @@ function handleResetRequest(request){
 			userClass.isEmailUsed(email,function(result){
 				if(user){
 					var newPassword = utils.passwordGenerate();
-					mailer.send('Réinitialisation de mot de passe',email,"Voici votre nouveau mot de passe : "+newPassword)
+					mailer.newPasswordMail(email,newPassword);
+					user.password = utils.encrypt(newPassword);
+					userClass.save(user,function(user){console.log(user)});
 				}
 			});
 
@@ -163,6 +197,16 @@ function handleResetRequest(request){
 		});
 	
 	}
+}
+function testEmail(email){
+	userClass.findByEmail(email,function(user){
+				if(user){
+					var newPassword = utils.passwordGenerate();
+					mailer.newPasswordMail(email,newPassword);
+					user.password = utils.encrypt(newPassword);
+					userClass.save(user,function(user){console.log(user)});
+				}
+			});
 }
 
 

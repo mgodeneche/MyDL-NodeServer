@@ -6,6 +6,8 @@ var userSchema = mongoose.Schema({
     username: String,
     email: String,
     password : String,
+    downloads : [],
+    activated : Boolean
 });
 
 var User = mongoose.model('User', userSchema);
@@ -15,6 +17,7 @@ exports.create = function(username,email,password){
 	username : username,
 	email : email,
 	password : utils.encrypt(password),
+    downloads : new Array()
 	});
 };
 
@@ -75,7 +78,6 @@ exports.findByEmail = function(emailProvided,callback){
         callback(user);
     });
 }
-
 
 
 

@@ -24,11 +24,16 @@ exports.decrypt =function(text){
 	var decipher = crypto.createDecipher(algorithm,password);;
 	var dec = decipher.update(text,'hex','utf8');
 	dec += decipher.final('utf8');
-	return dec;
+	return dec
 }
 
 exports.passwordGenerate = function(){
-	var randomstring = Math.random().toString(36).slice(-8);
+	var randomstring = Math.random().toString(36).slice(-10);
+	console.log(randomstring);
+	return randomstring;
+}
+exports.linkGenerate = function(){
+	var randomstring = Math.random().toString(36).slice(-20);
 	console.log(randomstring);
 	return randomstring;
 }

@@ -22,7 +22,7 @@ var transporter = nodemailer.createTransport({
 
 // NB! No need to recreate the transporter object. You can use
 // the same transporter object for all e-mails
-exports.send = function(subject,target,text){
+function sendMail(subject,target,text){
 
     fs.readFile('./ressources/hero.html', function (err, html) {
     if (err) {
@@ -31,7 +31,7 @@ exports.send = function(subject,target,text){
     userClass.findByEmail(target,function(user){
         var template = Handlebars.compile(htmlToString(html));
         var data = {    "username": user.username, 
-                        "headComment": "Bonjour ! Besoin d'un nouveau mot de passe ?",
+                        "headComment": text
                         
                     };
 
@@ -63,5 +63,17 @@ function htmlToString(data){
     output+=data;
     output+= " \" ";
     return output;
+}
+
+exports.newPasswordMail = function(target,newPassword){
+    var subject = "Réinitialisation de mot de passe";
+    var text = "Vous avez égaré votre mot de passe ? Aucun problème ! En voilà un autre : "+newPassword
+    sendMail(subject,target,text);
+}
+
+exports.registerMail = function(target,link){
+    var subject = "Confirmation de votre inscription";
+    var text = "Toute la team My-DL vous souhaite la bienvenue ! Pour vérifier votre compte veuillez cliquer sur le lien suiviant : "+link
+    sendMail(subject,target,link);
 }
 
