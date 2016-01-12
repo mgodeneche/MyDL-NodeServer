@@ -8,15 +8,11 @@ var app = require('express')();
 var mailer = require('express-mailer');
 var http = require('http').Server(app);
 var userClass = require('./src/users.js');
-var downloadClass = require('./src/downloads.js');
 var utils = require('./src/utils.js');
 var mailer = require('./src/mailer.js');
 var url = require('url');
-var qs = require('querystring');
 var myURI = 'mongodb://admin:admin@ds035750.mongolab.com:35750/mydl';
 var mongoose = require('mongoose');
-var mailMGO = 'maxence.godeneche@gmail.com';
-var subject ='test d\'envoi de mail';
 mongoose.connect(myURI);
 
 
@@ -26,7 +22,7 @@ mongoose.connect(myURI);
 *
 */
 
-http.listen(8054, function(){
+var httpServer = http.listen(8054, function(){
   console.log('listening on *:%s',8054);
 });
 
@@ -39,6 +35,7 @@ db.once('open', function (callback) {
   	console.log("MyDL Server started at "+timenow);
   	
 });
+
 /****
 *
 * ROUTES
@@ -57,11 +54,11 @@ app.post('/auth', function(req, res){
 
 //C'est ici qu'on prends l'enregisrement
 app.post('/register', function(req, res){
-	handleRegisterRequest(req,function(userCreated){
-		if(userCreated===true){
-			res.send(200);
+	handleRegisterRequest(req,function(userCreated,error){
+		if(userCreated===true || error != true){
+			res.send(201);
 		}else{
-			res.send(400);
+			res.send(418);
 		}
 	});
  	console.log("register !");
@@ -128,7 +125,6 @@ function handleRegisterRequest(request,callback){
         request.on('data', function (data) {
             body += data;
         });
-		var userCreated = false;
 		// Get datas, parse them and create user with it
         request.on('end', function () {
 			var data = JSON.parse(body);
@@ -138,20 +134,20 @@ function handleRegisterRequest(request,callback){
 			
 			myUser = userClass.create(login,email,password);
 			//CALLBACK DE LA MORT, pas testé.
-			userClass.isEmailUsed(email,function(result){
+			userClass.isEmailUsed(email,function(user){
 				if(user){
-					console.log('Le user existe déja');
-					// break ici 
+					var error = true;
+					console.log('Il existe déja un utilisateur avec l\'adresse email suivante :'+user.email);
+					callback(user,error);
 				}
 			});
 			userClass.save(myUser,function(myUser){
-				var activationLink = utils.linkGenerate();
-				mailer.registerMail(email,activationLink)
-				userCreated = true;
+				var activationLink = utils.getServerURL()+utils.linkGenerate();
+				mailer.registerMail(myUser.email,activationLink)
 			});
 
 		});
-		callback(userCreated);
+		callback(myUser);
 	}
 }
 
@@ -179,7 +175,7 @@ function handleResetRequest(request){
         request.on('data', function (data) {
             body += data;
         });
-		
+		5
 		// Get datas, parse them and create user with it
         request.on('end', function () {
 			var data = JSON.parse(body);
@@ -198,16 +194,7 @@ function handleResetRequest(request){
 	
 	}
 }
-function testEmail(email){
-	userClass.findByEmail(email,function(user){
-				if(user){
-					var newPassword = utils.passwordGenerate();
-					mailer.newPasswordMail(email,newPassword);
-					user.password = utils.encrypt(newPassword);
-					userClass.save(user,function(user){console.log(user)});
-				}
-			});
-}
+
 
 
 

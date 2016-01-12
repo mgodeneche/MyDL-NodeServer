@@ -53,7 +53,6 @@ exports.authenticate = function(user,callback){
 }
 
 exports.isEmailUsed = function(emailProvided,callback){
-    var result = "false";
     var query = User.where(
     { 
         email : emailProvided,
@@ -62,9 +61,8 @@ exports.isEmailUsed = function(emailProvided,callback){
     query.findOne(function(err,user){
         if(err){return handleError(err);}
         if(user){
-            result = "true";
+            callback(user);
         }
-        callback(result);
     });
 }
 exports.findByEmail = function(emailProvided,callback){
