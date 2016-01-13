@@ -24,8 +24,11 @@ mongoose.connect(myURI);
 
 var httpServer = http.listen(8054, function(){
 <<<<<<< HEAD
+<<<<<<< HEAD
   console.log('Listening on *:%s',8054);
 =======
+=======
+>>>>>>> 8c4d552d1306b43b196151cebb342c1a8927703e
   console.log('listening on *:%s',8054);
 >>>>>>> 8c4d552d1306b43b196151cebb342c1a8927703e
 });
@@ -199,8 +202,12 @@ function handleResetRequest(request){
 	}
 <<<<<<< HEAD
 }
+<<<<<<< HEAD
 =======
 }
+=======
+
+>>>>>>> 8c4d552d1306b43b196151cebb342c1a8927703e
 
 
 
