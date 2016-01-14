@@ -23,14 +23,8 @@ mongoose.connect(myURI);
 */
 
 var httpServer = http.listen(8054, function(){
-<<<<<<< HEAD
-<<<<<<< HEAD
+
   console.log('Listening on *:%s',8054);
-=======
-=======
->>>>>>> 8c4d552d1306b43b196151cebb342c1a8927703e
-  console.log('listening on *:%s',8054);
->>>>>>> 8c4d552d1306b43b196151cebb342c1a8927703e
 });
 
 var db = mongoose.connection;
@@ -149,7 +143,7 @@ function handleRegisterRequest(request,callback){
 				}
 			});
 			userClass.save(myUser,function(myUser){
-				var activationLink = utils.getServerURL()+utils.linkGenerate();
+				var activationLink = utils.getServerURL()+linkGenerate();
 				mailer.registerMail(myUser.email,activationLink)
 			});
 
@@ -182,7 +176,7 @@ function handleResetRequest(request){
         request.on('data', function (data) {
             body += data;
         });
-		5
+
 		// Get datas, parse them and create user with it
         request.on('end', function () {
 			var data = JSON.parse(body);
@@ -200,18 +194,14 @@ function handleResetRequest(request){
 		});
 	
 	}
-<<<<<<< HEAD
+
 }
-<<<<<<< HEAD
-=======
-}
-=======
-
->>>>>>> 8c4d552d1306b43b196151cebb342c1a8927703e
 
 
 
 
 
 
->>>>>>> 8c4d552d1306b43b196151cebb342c1a8927703e
+
+
+
