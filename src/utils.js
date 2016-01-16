@@ -47,6 +47,9 @@ exports.linkGenerate = function(){
 
 exports.getServerURL = function(httpServer) {
 	var ip = httpServer.address().address;
+	if(ip.length<3){
+		ip = "127.0.0.1";
+	}
 	var port = httpServer.address().port;
 	return 'http://'+ip+':'+port;
 }

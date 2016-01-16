@@ -28,7 +28,6 @@ var httpServer = http.listen(8054, function(){
 });
 
 var db = mongoose.connection;
-utils.linkGenerate();
 db.on('error', console.error.bind(console, 'Connection error:'));
 db.once('open', function (callback) {
 	var time = new Date();
@@ -121,7 +120,7 @@ function handleLoginRequest(request,callback) {
 
 function handleRegisterRequest(request,callback){
 	if (request.method == 'POST') {
-    	//console.log("Trying to get POST");
+    	console.log("Register hit");
         var body = '';
         request.on('data', function (data) {
             body += data;
