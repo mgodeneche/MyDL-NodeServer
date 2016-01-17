@@ -78,7 +78,6 @@ app.get('/activation', function(req, res){
 
 
 app.post('/downloadAdd',function(req,res){
-	handleDownloadRequest(req);
 	console.log('on ajoute un DL');
 })
 /****
@@ -195,30 +194,6 @@ function handleResetRequest(request){
 	
 	}
 
-}
-function handleDownloadRequest(request) {
-	if (request.method == 'POST') {
-		//console.log("Trying to get POST");
-		var body = '';
-		request.on('data', function (data) {
-			body += data;
-		});
-
-		// Get datas, parse them and create user with it
-		request.on('end', function () {
-			var data = JSON.parse(body);
-			var ownerEmail = data.email;
-			var downloadItem = data.downloadData;
-			userClass.findByEmail(ownerEmail, function (user) {
-				user.downloads.push(downloadItem);
-				userClass.save(user,function(user){
-					console.log(user.downloads);
-				});
-			});
-
-
-		});
-	}
 }
 
 
