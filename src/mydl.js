@@ -52,8 +52,10 @@ function handleRequest(request, response) {
 			var auth = authenticate(myUser, onAuthenticate);
 			console.log(auth);
         });
-    }else{
+    }if(request.method == 'GET'){
 		console.log("Trying to get GET");
+	}else{
+		console.log("Nothing.");
 	}
 }
 
