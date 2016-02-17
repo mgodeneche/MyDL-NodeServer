@@ -25,6 +25,7 @@ mongoose.connect(myURI);
 var httpServer = http.listen(8054, function(){
 
   console.log('Listening on *:%s',8054);
+  console.log(utils.decrypt('d4bf60231d2b4d6ac4'));
 });
 
 var db = mongoose.connection;
